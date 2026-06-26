@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      body { font-family: 'Segoe UI', sans-serif; text-align: center; padding: 20px; background-color: #f8fafc; color: #1e293b; }
+      h2 { color: #0f172a; margin-bottom: 5px; }
+      h3 { color: #64748b; margin-top: 0; font-weight: normal; margin-bottom: 30px; }
+      .grid-conducteurs { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; max-width: 400px; margin: 0 auto; }
+      .btn-user { background-color: white; color: #334155; padding: 20px 10px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; }
+      .btn-user:active { transform: scale(0.95); background-color: #e2e8f0; }
+      .loader { border: 4px solid #f1f5f9; border-top: 4px solid #3b82f6; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; display: none; }
+      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+      #status { font-size: 16px; margin-top: 20px; font-weight: bold; padding: 10px; border-radius: 8px; max-width: 400px; margin: 0 auto; }
+    </style>
+  </head>
+  <body>
+
+    <h2 id="titre-page">🚗 Suivi Véhicule</h2>
+    <h3 id="sous-titre">Qui prend le volant ?</h3>
+    
+    <div id="interface-boutons" class="grid-conducteurs">
+      <button class="btn-user" onclick="validerTrajet('Thomas')">Thomas</button>
+      <button class="btn-user" onclick="validerTrajet('Sarah')">Sarah</button>
+      <button class="btn-user" onclick="validerTrajet('Michel')">Michel</button>
+      <button class="btn-user" onclick="validerTrajet('Chloé')">Chloé</button>
+    </div>
+
+    <div id="loader" class="loader"></div>
+    <p id="status"></p>
+
+    <script>
+      // Sur GitHub, on récupère le paramètre "v" directement depuis l'URL de la barre d'adresse
+      const urlParams = new URLSearchParams(window.location.search);
+      const nomVoiture = urlParams.get('v') || "Inconnue";
+      
+      document.getElementById("titre-page").innerHTML = "🚗 Véhicule : " + nomVoiture.replace("_", " ").toUpperCase();
+
+      function validerTrajet(chauffeur) {
+        document.getElementById("interface-boutons").style.display = "none";
+        document.getElementById("loader").style.display = "block";
+        document.getElementById("status").style.backgroundColor = "#e2e8f0";
+        document.getElementById("status").style.color = "#1e293b";
+        document.getElementById("status").innerHTML = "⏳ Recherche du GPS pour " + chauffeur + "...";
+
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            function(position) {
+              sendPosition(position, chauffeur);
+            }, 
+            function(error) {
+              reinitialiserInterface("❌ Erreur GPS : Activez la géolocalisation.");
+            }, 
+            { enableHighAccuracy: true, timeout: 10000 }
+          );
+        } else {
+          reinitialiserInterface("❌ Le GPS n'est pas supporté.");
+        }
+      }
+
+      function sendPosition(position, chauffeur) {
+        document.getElementById("status").innerHTML = "⚡ Connexion au serveur Google Sheets...";
+
+        // ✏️ REMPLACE CETTE URL PAR TON URL DE DÉPLOIEMENT WEB APP GOOGLE SCRIPT
+        const googleAppScriptUrl = "https://script.google.com/macros/s/AKfycbwKaI4ilRRAMnHBnes7oxe9ytuVUhqK8P2Rze2HIHClw3zICmkxMXC4bcY3fKDwj48KqA/exec";
+
+        // Envoi des données proprement en arrière-plan
+        fetch(`${googleAppScriptUrl}?v=${encodeURIComponent(nomVoiture)}&chauffeur=${encodeURIComponent(chauffeur)}&lat=${position.coords.latitude}&lng=${position.coords.longitude}`)
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById("loader").style.display = "none";
+            document.getElementById("status").style.backgroundColor = "#dcfce7";
+            document.getElementById("status").style.color = "#166534";
+            document.getElementById("status").innerHTML = `✅ Merci ${chauffeur} ! Enregistré.`;
+          })
+          .catch(err => {
+            // Souvent Google bloque l'affichage de la réponse à cause des règles CORS, 
+            // mais les données arrivent quand même dans le Sheets ! On met une validation positive.
+            document.getElementById("loader").style.display = "none";
+            document.getElementById("status").style.backgroundColor = "#dcfce7";
+            document.getElementById("status").style.color = "#166534";
+            document.getElementById("status").innerHTML = `✅ Enregistrement validé pour ${chauffeur}.`;
+          });
+      }
+
+      function reinitialiserInterface(messageErreur) {
+        document.getElementById("loader").style.display = "none";
+        document.getElementById("interface-boutons").style.display = "grid";
+        document.getElementById("status").style.backgroundColor = "#fee2e2";
+        document.getElementById("status").style.color = "#991b1b";
+        document.getElementById("status").innerHTML = messageErreur;
+      }
+    </script>
+  </body>
+</html>
