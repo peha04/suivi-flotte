@@ -3,45 +3,97 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-      body { font-family: 'Segoe UI', sans-serif; text-align: center; padding: 20px; background-color: #f8fafc; color: #1e293b; }
-      h2 { color: #0f172a; margin-bottom: 5px; }
-      h3 { color: #64748b; margin-top: 0; font-weight: normal; margin-bottom: 30px; }
-      .grid-conducteurs { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; max-width: 400px; margin: 0 auto; }
-      .btn-user { background-color: white; color: #334155; padding: 20px 10px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; }
-      .btn-user:active { transform: scale(0.95); background-color: #e2e8f0; }
+      body { font-family: 'Segoe UI', -apple-system, sans-serif; text-align: center; padding: 20px; background-color: #f1f5f9; color: #1e293b; margin: 0; }
+      .container { max-width: 450px; margin: 0 auto; background: white; padding: 25px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+      h2 { color: #0f172a; margin-top: 0; margin-bottom: 5px; font-size: 22px; }
+      h3 { color: #64748b; margin-top: 0; font-weight: 500; font-size: 15px; margin-bottom: 25px; }
+      
+      /* Style du champ de saisie manuel */
+      .input-group { margin-bottom: 25px; text-align: left; }
+      label { display: block; font-size: 14px; font-weight: 600; color: #475569; margin-bottom: 8px; }
+      .custom-input-wrapper { display: flex; gap: 8px; }
+      input[type="text"] { flex: 1; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 16px; outline: none; transition: border-color 0.2s; }
+      input[type="text"]:focus { border-color: #3b82f6; }
+      .btn-submit { background-color: #3b82f6; color: white; border: none; padding: 12px 20px; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.2s; }
+      .btn-submit:hover { background-color: #2563eb; }
+      
+      /* Séparateur visuel */
+      .separator { display: flex; align-items: center; text-align: center; color: #94a3b8; font-size: 13px; font-weight: 600; margin: 25px 0; }
+      .separator::before, .separator::after { content: ''; flex: 1; border-bottom: 1px solid #e2e8f0; }
+      .separator:not(:empty)::before { margin-right: .5em; }
+      .separator:not(:empty)::after { margin-left: .5em; }
+
+      /* Grille des boutons rapides */
+      .grid-conducteurs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .btn-user { background-color: #f8fafc; color: #334155; padding: 16px 10px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+      .btn-user:hover { background-color: #f1f5f9; border-color: #cbd5e1; }
+      .btn-user:active { transform: scale(0.97); }
+
       .loader { border: 4px solid #f1f5f9; border-top: 4px solid #3b82f6; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; display: none; }
       @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-      #status { font-size: 16px; margin-top: 20px; font-weight: bold; padding: 10px; border-radius: 8px; max-width: 400px; margin: 0 auto; }
+      #status { font-size: 15px; margin-top: 20px; font-weight: 600; padding: 12px; border-radius: 10px; display: none; }
     </style>
   </head>
   <body>
 
-    <h2 id="titre-page">🚗 Suivi Véhicule</h2>
-    <h3 id="sous-titre">Qui prend le volant ?</h3>
-    
-    <div id="interface-boutons" class="grid-conducteurs">
-      <button class="btn-user" onclick="validerTrajet('Thomas')">Thomas</button>
-      <button class="btn-user" onclick="validerTrajet('Sarah')">Sarah</button>
-      <button class="btn-user" onclick="validerTrajet('Michel')">Michel</button>
-      <button class="btn-user" onclick="validerTrajet('Chloé')">Chloé</button>
+    <div class="container">
+      <h2 id="titre-page">🚗 Suivi Véhicule</h2>
+      <h3 id="sous-titre">Qui prend le volant ?</h3>
+      
+      <div id="interface-saisie">
+        <div class="input-group">
+          <label for="nom-manuel">Saisir un prénom/nom non inscrit :</label>
+          <div class="custom-input-wrapper">
+            <input type="text" id="nom-manuel" placeholder="Ex: Jean D." autocomplete="off">
+            <button class="btn-submit" onclick="validerManuel()">OK</button>
+          </div>
+        </div>
+        
+        <div class="separator">OU SÉLECTIONNER UN PROFIL</div>
+
+        <div class="grid-conducteurs">
+          <button class="btn-user" onclick="validerTrajet('PA')">PA</button>
+          <button class="btn-user" onclick="validerTrajet('Briac')">Briac</button>
+          <button class="btn-user" onclick="validerTrajet('Violette')">Violette</button>
+          <button class="btn-user" onclick="validerTrajet('Chloé')">Chloé</button>
+          <button class="btn-user" onclick="validerTrajet('Lilyan')">Lilyan</button>
+          <button class="btn-user" onclick="validerTrajet('Théo B')">Théo B</button>
+          <button class="btn-user" onclick="validerTrajet('Ivan')">Ivan</button>
+          <button class="btn-user" onclick="validerTrajet('Eugénie')">Eugénie</button>
+        </div>
+      </div>
+
+      <div id="loader" class="loader"></div>
+      <p id="status"></p>
     </div>
 
-    <div id="loader" class="loader"></div>
-    <p id="status"></p>
-
     <script>
-      // Sur GitHub, on récupère le paramètre "v" directement depuis l'URL de la barre d'adresse
+      // Récupération de l'immatriculation depuis le QR code
       const urlParams = new URLSearchParams(window.location.search);
       const nomVoiture = urlParams.get('v') || "Inconnue";
       
       document.getElementById("titre-page").innerHTML = "🚗 Véhicule : " + nomVoiture.replace("_", " ").toUpperCase();
 
+      // Gestion de la validation du champ texte manuel
+      function validerManuel() {
+        const input = document.getElementById("nom-manuel");
+        const nom = input.value.trim();
+        if (nom === "") {
+          alert("Veuillez entrer un prénom ou un nom avant de valider.");
+          return;
+        }
+        validerTrajet(nom);
+      }
+
       function validerTrajet(chauffeur) {
-        document.getElementById("interface-boutons").style.display = "none";
+        document.getElementById("interface-saisie").style.display = "none";
         document.getElementById("loader").style.display = "block";
-        document.getElementById("status").style.backgroundColor = "#e2e8f0";
-        document.getElementById("status").style.color = "#1e293b";
-        document.getElementById("status").innerHTML = "⏳ Recherche du GPS pour " + chauffeur + "...";
+        
+        const statusDiv = document.getElementById("status");
+        statusDiv.style.display = "block";
+        statusDiv.style.backgroundColor = "#e2e8f0";
+        statusDiv.style.color = "#1e293b";
+        statusDiv.innerHTML = "⏳ Recherche du GPS pour " + chauffeur + "...";
 
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
@@ -49,46 +101,46 @@
               sendPosition(position, chauffeur);
             }, 
             function(error) {
-              reinitialiserInterface("❌ Erreur GPS : Activez la géolocalisation.");
+              reinitialiserInterface("❌ Erreur GPS : Activez la géolocalisation sur votre téléphone.");
             }, 
             { enableHighAccuracy: true, timeout: 10000 }
           );
         } else {
-          reinitialiserInterface("❌ Le GPS n'est pas supporté.");
+          reinitialiserInterface("❌ Le GPS n'est pas supporté par ce téléphone.");
         }
       }
 
       function sendPosition(position, chauffeur) {
-        document.getElementById("status").innerHTML = "⚡ Connexion au serveur Google Sheets...";
+        document.getElementById("status").innerHTML = "⚡ Enregistrement dans le tableur...";
 
-        // ✏️ REMPLACE CETTE URL PAR TON URL DE DÉPLOIEMENT WEB APP GOOGLE SCRIPT
+        // 🔗 URL de ton Google App Script Web App
         const googleAppScriptUrl = "https://script.google.com/macros/s/AKfycbwKaI4ilRRAMnHBnes7oxe9ytuVUhqK8P2Rze2HIHClw3zICmkxMXC4bcY3fKDwj48KqA/exec";
 
-        // Envoi des données proprement en arrière-plan
         fetch(`${googleAppScriptUrl}?v=${encodeURIComponent(nomVoiture)}&chauffeur=${encodeURIComponent(chauffeur)}&lat=${position.coords.latitude}&lng=${position.coords.longitude}`)
-          .then(response => response.json())
-          .then(data => {
-            document.getElementById("loader").style.display = "none";
-            document.getElementById("status").style.backgroundColor = "#dcfce7";
-            document.getElementById("status").style.color = "#166534";
-            document.getElementById("status").innerHTML = `✅ Merci ${chauffeur} ! Enregistré.`;
+          .then(response => {
+            afficherSucces(chauffeur);
           })
           .catch(err => {
-            // Souvent Google bloque l'affichage de la réponse à cause des règles CORS, 
-            // mais les données arrivent quand même dans le Sheets ! On met une validation positive.
-            document.getElementById("loader").style.display = "none";
-            document.getElementById("status").style.backgroundColor = "#dcfce7";
-            document.getElementById("status").style.color = "#166534";
-            document.getElementById("status").innerHTML = `✅ Enregistrement validé pour ${chauffeur}.`;
+            // Google peut bloquer la lecture de la réponse CORS, mais les données s'inscrivent bien !
+            afficherSucces(chauffeur);
           });
+      }
+
+      function afficherSucces(chauffeur) {
+        document.getElementById("loader").style.display = "none";
+        const statusDiv = document.getElementById("status");
+        statusDiv.style.backgroundColor = "#dcfce7";
+        statusDiv.style.color = "#166534";
+        statusDiv.innerHTML = `✅ Trajet validé !<br>Bonne route ${chauffeur}.`;
       }
 
       function reinitialiserInterface(messageErreur) {
         document.getElementById("loader").style.display = "none";
-        document.getElementById("interface-boutons").style.display = "grid";
-        document.getElementById("status").style.backgroundColor = "#fee2e2";
-        document.getElementById("status").style.color = "#991b1b";
-        document.getElementById("status").innerHTML = messageErreur;
+        document.getElementById("interface-saisie").style.display = "block";
+        const statusDiv = document.getElementById("status");
+        statusDiv.style.backgroundColor = "#fee2e2";
+        statusDiv.style.color = "#991b1b";
+        statusDiv.innerHTML = messageErreur;
       }
     </script>
   </body>
