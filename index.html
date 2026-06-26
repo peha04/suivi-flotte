@@ -114,7 +114,7 @@
         document.getElementById("status").innerHTML = "⚡ Enregistrement dans le tableur...";
 
         // 🔗 URL de ton Google App Script Web App
-        const googleAppScriptUrl = "https://script.google.com/macros/s/AKfycbwKaI4ilRRAMnHBnes7oxe9ytuVUhqK8P2Rze2HIHClw3zICmkxMXC4bcY3fKDwj48KqA/exec";
+        const googleAppScriptUrl = "https://script.google.com/macros/s/AKfycbxQSs3fep2sGB759EQYg0jfjQKxm-RvGygVXOC8tYtcREf4hEvD5fULfWB35Ca_zZenEw/exec";
 
         fetch(`${googleAppScriptUrl}?v=${encodeURIComponent(nomVoiture)}&chauffeur=${encodeURIComponent(chauffeur)}&lat=${position.coords.latitude}&lng=${position.coords.longitude}`)
           .then(response => {
